@@ -10,9 +10,13 @@ from langchain_groq import ChatGroq
 from langchain.agents import create_agent
 from langchain_core.tools import tool
 
-# --- CONFIGURAÇÃO DA PÁGINA ---
-st.set_page_config(page_title="Agente RAG - Documentos", page_icon="🤖")
-st.title("🤖 Agente RAG - Consulta de Documentos")
+
+# page_title define o nome que aparece na ABA do navegador
+st.set_page_config(page_title="Assistente de Documentos - Pegasus", page_icon="📚")
+
+# Título e subtítulo visíveis no topo da página web
+st.title("📚 Assistente de Documentos Pegasus")
+st.caption("Tire suas dúvidas sobre a documentação interna do projeto.")
 
 # --- VERIFICAÇÃO DA API KEY ---
 api_key = os.getenv("GROQ_API_KEY")
@@ -20,19 +24,16 @@ if not api_key:
     st.error("Chave GROQ_API_KEY não configurada!")
     st.stop()
 
-# --- CARREGAMENTO DO VECTOR STORE (Com Cache para performance) ---
+# --- CARREGAMENTO DO VECTOR STORE ---
 @st.cache_resource(show_spinner="Carregando e indexando documentos...")
 def inicializar_vector_store():
     documentos_dir = Path("documentos")
-    
-    # Loaders e Chunking
     loader = DirectoryLoader(str(documentos_dir), glob="*.pdf", loader_cls=PyPDFLoader)
     pages = loader.load()
     
     splitter = RecursiveCharacterTextSplitter(chunk_size=800, chunk_overlap=100)
     chunks = splitter.split_documents(pages)
     
-    # Embeddings e Chroma
     embed_model = HuggingFaceEmbeddings(model_name="intfloat/multilingual-e5-small")
     
     vector_store = Chroma.from_documents(
@@ -75,23 +76,58 @@ Regras:
 
 agente_pdf = create_agent(model=llm, tools=[pega_contexto], system_prompt=system_prompt)
 
-# --- INTERFACE DE CHAT ---
+# SAUDAÇÃO INICIAL DO CHAT
 if "messages" not in st.session_state:
-    st.session_state.messages = []
+    st.session_state.messages = [
+        {
+            "role": "assistant",
+            "content": "Olá! Sou o assistente virtual do Santos Pegasus Soluciones. Como posso te ajudar hoje com a documentação?"
+        }
+    ]
 
-# Exibe histórico de mensagens
+# Exemplos de perguntas a serem feitas
+st.markdown("**Exemplos de perguntas que você pode fazer:**")
+
+# Criamos botões lado a lado
+col1, col2, col3 = st.columns(3)
+
+prompt_clicado = None
+
+with col1:
+    if st.button("💡 Como fazer commits?"):
+        prompt_clicado = "Como fazer commits pequenos e descritivos?"
+
+with col2:
+    if st.button("🏗️ Microsserviços"):
+        prompt_clicado = "Como funciona a arquitetura de microsserviços?"
+
+with col3:
+    if st.button("🚨 Falhas em produção"):
+        prompt_clicado = "Como devemos lidar com uma falha em produção?"
+
+st.markdown("---")
+
+# Exibe histórico das mensagens de chat
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Entrada do usuário
-if prompt := st.chat_input("Faça uma pergunta sobre os documentos..."):
-    st.chat_message("user").markdown(prompt)
-    st.session_state.messages.append({"role": "user", "content": prompt})
+# Entrada por caixa de texto
+prompt_input = st.chat_input("Faça uma pergunta sobre os documentos...")
 
+# Define a pergunta final (seja digitada ou clicada num botão)
+prompt_final = prompt_clicado or prompt_input
+
+# Executa o RAG se houver algum prompt enviado
+if prompt_final:
+    # Mostra e salva a mensagem do usuário
+    st.chat_message("user").markdown(prompt_final)
+    st.session_state.messages.append({"role": "user", "content": prompt_final})
+
+    # Resposta do assistente
     with st.chat_message("assistant"):
-        with st.spinner("Pensando..."):
-            resposta = agente_pdf.invoke({"messages": [("user", prompt)]})
+        with st.spinner("Buscando informações nos documentos..."):
+            resposta = agente_pdf.invoke({"messages": [("user", prompt_final)]})
             conteudo = resposta["messages"][-1].content
             st.markdown(conteudo)
     
