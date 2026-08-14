@@ -144,6 +144,35 @@ Para realizar o deploy na nuvem do Streamlit:
 
 ---
 
+## 🌐 Exemplos de interação com o chat
+ ```toml
+PERGUNTA: Como fazer commits pequenos e descritivos?
+RESPOSTA: Para fazer commits pequenos e descritivos, você deve seguir o padrão Conventional Commits. Isso significa que cada commit deve
+ter uma mensagem que descreva a alteração realizada, utilizando um formato específico: `tipo(escopo): descrição curta`. Os tipos de
+commits incluem `feat` para novas funcionalidades, `fix` para correções de bugs, `chore` para manutenção de build ou dependências,
+e `docs` para mudanças na documentação. Além disso, é importante manter os commits pequenos, focando em uma alteração de cada vez, e
+utilizar branches para organizar o seu trabalho, como criar uma branch de feature para desenvolver uma nova funcionalidade. Lembre-se de
+atualizar sua branch develop local, criar sua branch de feature, desenvolver e fazer commits pequenos e descritivos, e subir sua branch
+para o repositório remoto.
+
+================================================================================
+
+PERGUNTA: Como funciona a arquitetura de microsserviços?
+RESPOSTA: A arquitetura de microsserviços funciona da seguinte forma:
+
+*   Cada microsserviço é responsável por um domínio específico de negócio e é projetado para ser escalável de forma independente.
+*   Os microsserviços se comunicam entre si por meio de APIs ou mensagens, permitindo que cada serviço seja desenvolvido, testado e implantado de forma autônoma.
+*   A arquitetura de microsserviços permite que as equipes de desenvolvimento tenham autonomia completa sobre o ciclo de vida do software, desde o código até o deploy em produção.
+*   A escalabilidade independente dos microsserviços permite que os recursos sejam alocados de forma mais eficiente, reduzindo os custos operativos e melhorando a eficiência do sistema.
+*   A arquitetura de microsserviços também permite que as equipes de desenvolvimento trabalhem de forma mais ágil e flexível, pois cada serviço pode ser desenvolvido e implantado de forma independente.
+
+Essas são as principais características da arquitetura de microsserviços, que permitem que os sistemas sejam mais escaláveis, flexíveis e eficientes.
+
+================================================================================
+   ```
+
+---
+
 ## 🛡️ Regras e Guardrails do Agente
 
 - O agente consulta estritamente o conteúdo dos PDFs através do ChromaDB.
