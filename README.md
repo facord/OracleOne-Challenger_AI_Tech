@@ -1,4 +1,4 @@
-# 🤖 Agente RAG - Challenge ALURA ORACLE OCI (Pegasus)
+# 🤖 Agente RAG - Challenge ALURA ORACLE (Pegasus)
 
 Um assistente inteligente baseado em **RAG (Retrieval-Augmented Generation)** desenvolvido para consultar e responder dúvidas com precisão sobre a documentação técnica e operacional do projeto.
 
@@ -6,7 +6,7 @@ Um assistente inteligente baseado em **RAG (Retrieval-Augmented Generation)** de
 
 ## 📸 Demonstração da Aplicação
 
-> *Interface desenvolvida em Streamlit para interação em tempo real com o assistente RAG.*
+> *Interface desenvolvida em Streamlit para interação em tempo real com o assistente RAG.* <br>
 > Link para testes: https://oracleone-challengeraitech-fabianacordeiro.streamlit.app/
 
 ---
